@@ -1,0 +1,29 @@
+{
+  "required": true,
+  "package": "me.madeq.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AbstractWidgetMixin",
+    "ChatComponentMixin",
+    "ClientHandshakePacketListenerImplMixin",
+    "ClientPacketListenerMixin",
+    "ConnectScreenMixin",
+    "ConnectionAccessor",
+    "ConnectionMixin",
+    "DisconnectedScreenAccessor",
+    "GuiMixin",
+    "MinecraftMixin",
+    "MultiplayerGamemodeMixin",
+    "PlayerInfoMixin",
+    "PlayerTabOverlayMixin",
+    "ReceivingLevelScreenMixin",
+    "ScreenMixin",
+    "TitleScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

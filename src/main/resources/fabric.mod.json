@@ -1,0 +1,27 @@
+{
+	"schemaVersion": 1,
+	"id": "modid",
+	"version": "${version}",
+	"name": "LiteClient",
+	"description": "Client-side utilities for LiteClient.",
+	"authors": [
+		"madeq"
+	],
+	"contact": {},
+	"license": "MIT",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+          "me.madeq.client.LiteClient"
+		]
+	},
+	"mixins": [
+		"modid.client.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.4",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

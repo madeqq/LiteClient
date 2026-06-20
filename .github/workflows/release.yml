@@ -1,0 +1,91 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build client JAR
+        run: chmod +x gradlew && ./gradlew build --no-daemon -x test
+
+      - name: Read mod version
+        id: version
+        run: echo "value=$(grep '^mod_version=' gradle.properties | cut -d'=' -f2)" >> "$GITHUB_OUTPUT"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1 || true)
+          {
+            echo 'body<<EOF'
+            echo '## LiteClient Release'
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| **Version** | `${{ steps.version.outputs.value }}` |"
+            echo "| **Build** | `${{ github.run_number }}` |"
+            echo "| **Commit** | [`'"${GITHUB_SHA:0:7}"'`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) |"
+            echo "| **Minecraft** | `1.21.4` (Fabric) |"
+            echo
+            if [ -n "$PREVIOUS_TAG" ]; then
+              echo "### Changes since \`$PREVIOUS_TAG\`"
+            else
+              echo "### Recent changes"
+            fi
+            echo
+            if [ -n "$PREVIOUS_TAG" ]; then
+              git log "${PREVIOUS_TAG}..HEAD" --pretty=format:'- %s (`%h`)' --no-merges || echo "- No commits found"
+            else
+              git log -30 --pretty=format:'- %s (`%h`)' --no-merges || echo "- Initial automated release"
+            fi
+            echo
+            echo "### Installation"
+            echo "1. Install [Fabric Loader](https://fabricmc.net/use/) for **Minecraft 1.21.4**"
+            echo "2. Install [Fabric API](https://modrinth.com/mod/fabric-api)"
+            echo "3. Download \`LiteClient-${{ steps.version.outputs.value }}.jar\` from the assets below"
+            echo "4. Copy the JAR into your \`.minecraft/mods\` folder"
+            echo "5. Launch the game with the Fabric profile"
+            echo
+            echo "### Optional"
+            echo "- [ViaFabricPlus](https://modrinth.com/mod/viafabricplus) — multi-version protocol support"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.value }}-build.${{ github.run_number }}
+          name: LiteClient ${{ steps.version.outputs.value }} (build ${{ github.run_number }})
+          body: ${{ steps.changelog.outputs.body }}
+          files: build/libs/LiteClient-${{ steps.version.outputs.value }}.jar
+          draft: false
+          prerelease: false
+          generate_release_notes: false
