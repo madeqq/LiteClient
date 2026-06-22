@@ -38,7 +38,7 @@ public class ServerInfoCommand extends Command {
         String playersDisplay = maxPlayers > 0 ? playerCount + " / " + maxPlayers : String.valueOf(playerCount);
         long ping = serverData != null ? serverData.ping : -1;
         String pingDisplay = ping >= 0 ? ping + "ms" : "Unknown";
-        String gamemode = mc.player.gameMode.getGameModeForPlayer().getName();
+        String gamemode = mc.gameMode != null ? mc.gameMode.getPlayerMode().getName() : "Unknown";
 
         ChatHelper.send("<white>-------- <gradient:#4facfe:#00f2fe>Server Info</gradient> <white>--------");
         ChatHelper.send("<gray>Name:      <white>" + name);
