@@ -26,6 +26,7 @@ public class CommandManager {
                 new HideNickCommand(),
                 new PluginListCommand(),
                 new PlayerListCommand(),
+                new ServerInfoCommand(),
                 new TestCommand()
         );
 
