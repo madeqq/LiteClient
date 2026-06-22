@@ -61,7 +61,8 @@ dependencies {
     include implementation("net.kyori:examination-string:1.3.0")
 
     include implementation("net.raphimc:MinecraftAuth:${project.minecraftauth_version}")
-
+    include implementation("com.github.Vatuu:discord-rpc:1.6.2")
+    
     modCompileOnly "com.viaversion:viafabricplus-api:${project.viafabricplus_version}"
 
     include implementation("com.github.Vatuu:discord-rpc:1.6.2")
