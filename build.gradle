@@ -36,7 +36,7 @@ loom {
     splitEnvironmentSourceSets()
 
     mods {
-        "modid" {
+        "liteclient" {
             sourceSet sourceSets.main
             sourceSet sourceSets.client
         }
