@@ -39,43 +39,42 @@ jobs:
         run: echo "value=$(grep '^mod_version=' gradle.properties | cut -d'=' -f2)" >> "$GITHUB_OUTPUT"
 
       - name: Generate changelog
-        id: changelog
         run: |
           PREVIOUS_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1 || true)
           {
-            echo 'body<<EOF'
             echo '## LiteClient Release'
             echo
-            echo "| | |"
-            echo "|---|---|"
-            echo "| **Version** | `${{ steps.version.outputs.value }}` |"
-            echo "| **Build** | `${{ github.run_number }}` |"
-            echo "| **Commit** | [`'"${GITHUB_SHA:0:7}"'`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) |"
-            echo "| **Minecraft** | `1.21.4` (Fabric) |"
+            echo '| | |'
+            echo '|---|---|'
+            echo '| **Version** | `${{ steps.version.outputs.value }}` |'
+            echo '| **Build** | `${{ github.run_number }}` |'
+            echo '| **Commit** | [`'"${GITHUB_SHA:0:7}"'`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) |'
+            echo '| **Minecraft** | `1.21.4` (Fabric) |'
             echo
             if [ -n "$PREVIOUS_TAG" ]; then
               echo "### Changes since \`$PREVIOUS_TAG\`"
             else
-              echo "### Recent changes"
+              echo '### Recent changes'
             fi
             echo
             if [ -n "$PREVIOUS_TAG" ]; then
-              git log "${PREVIOUS_TAG}..HEAD" --pretty=format:'- %s (`%h`)' --no-merges || echo "- No commits found"
+              git log "${PREVIOUS_TAG}..HEAD" --pretty=format:'- %s (`%h`)' --no-merges || echo '- No commits found'
             else
-              git log -30 --pretty=format:'- %s (`%h`)' --no-merges || echo "- Initial automated release"
+              git log -30 --pretty=format:'- %s (`%h`)' --no-merges || echo '- Initial automated release'
             fi
             echo
-            echo "### Installation"
-            echo "1. Install [Fabric Loader](https://fabricmc.net/use/) for **Minecraft 1.21.4**"
-            echo "2. Install [Fabric API](https://modrinth.com/mod/fabric-api)"
-            echo "3. Download \`LiteClient-${{ steps.version.outputs.value }}.jar\` from the assets below"
-            echo "4. Copy the JAR into your \`.minecraft/mods\` folder"
-            echo "5. Launch the game with the Fabric profile"
+            echo '### Installation'
+            echo '1. Install [Fabric Loader](https://fabricmc.net/use/) for **Minecraft 1.21.4**'
+            echo '2. Install [Fabric API](https://modrinth.com/mod/fabric-api)'
+            echo '3. Install [ViaFabricPlus](https://modrinth.com/mod/viafabricplus)'
+            echo '4. Download `LiteClient-${{ steps.version.outputs.value }}.jar` from the assets below'
+            echo '5. Copy the JAR into your `.minecraft/mods` folder'
+            echo '6. Launch the game with the Fabric profile'
             echo
-            echo "### Optional"
-            echo "- [ViaFabricPlus](https://modrinth.com/mod/viafabricplus) — multi-version protocol support"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
+            echo '### Required Mods'
+            echo '- [Fabric API](https://modrinth.com/mod/fabric-api)'
+            echo '- [ViaFabricPlus](https://modrinth.com/mod/viafabricplus)'
+          } > release-notes.md
         env:
           GITHUB_SHA: ${{ github.sha }}
 
@@ -84,7 +83,7 @@ jobs:
         with:
           tag_name: v${{ steps.version.outputs.value }}-build.${{ github.run_number }}
           name: LiteClient ${{ steps.version.outputs.value }} (build ${{ github.run_number }})
-          body: ${{ steps.changelog.outputs.body }}
+          body_path: release-notes.md
           files: build/libs/LiteClient-${{ steps.version.outputs.value }}.jar
           draft: false
           prerelease: false
