@@ -65,7 +65,7 @@ dependencies {
     
     modCompileOnly "com.viaversion:viafabricplus-api:${project.viafabricplus_version}"
 
-    include implementation("com.github.Vatuu:discord-rpc:1.6.2")
+    include implementation("com.github.Vatuu:discord-rpc:v1")
 
 }
 
