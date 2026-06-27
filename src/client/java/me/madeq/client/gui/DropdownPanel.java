@@ -1,6 +1,7 @@
 package me.madeq.client.gui;
 
 import java.awt.Color;
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,6 +31,10 @@ public class DropdownPanel {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public List<GuiModuleEntry> getAllEntries() {
+		return Collections.unmodifiableList(entries);
 	}
 
 	public void render(GuiGraphics graphics, Font font, int mouseX, int mouseY) {
