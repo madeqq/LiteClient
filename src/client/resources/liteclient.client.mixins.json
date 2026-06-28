@@ -5,6 +5,7 @@
   "client": [
     "AbstractWidgetMixin",
     "ChatComponentMixin",
+    "ChatScreenMixin",
     "ClientHandshakePacketListenerImplMixin",
     "ClientPacketListenerMixin",
     "ConnectScreenMixin",
